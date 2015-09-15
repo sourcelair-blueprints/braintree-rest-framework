@@ -16,7 +16,6 @@
         braintree.setup('{{ client_token }}', 'dropin', {
           container: 'dropin-container',
           onPaymentMethodReceived: function (obj) {
-              alert('asdasd');
               window.location = '/customers/{{ customer_id}}/payment-methods';
           }
         });

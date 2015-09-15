@@ -59,6 +59,15 @@ class PaymentMethodViewset(viewsets.ViewSet):
                                            context={'request': request})
         return Response(serializer.data)
 
+    def delete(self, request, pk):
+        result = braintree.PaymentMethod.delete(pk)
+        if result.is_success:
+            return Response({'message': 'Deleted payment method successfully'})
+        response = Response({
+            'message': 'Could not delete payment method.'
+        }, status=500)
+        return response
+
 
 class PaymentMethodFormView(generics.RetrieveAPIView):
     """

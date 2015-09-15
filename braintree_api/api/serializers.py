@@ -15,11 +15,15 @@ class CustomerSerializer(serializers.Serializer):
         lookup_field='id',
         lookup_url_kwarg='customer_id'
     )
+    new_payment_method_form_url = serializers.HyperlinkedIdentityField(
+        view_name='customer-payment-method-form',
+        lookup_field='id',
+        lookup_url_kwarg='customer_id'
+    )
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
     transactions = serializers.SerializerMethodField(read_only=True)
-#     payment_method = serializers.CharField()
 
     def get_transactions(self, customer):
         transactions = braintree.Transaction.search(
