@@ -27,6 +27,9 @@ router.register('customers/(?P<customer_id>[a-z0-9]+)/payment-methods',
 router.register('payment-methods',
                 views.PaymentMethodViewset,
                 base_name='payment-method')
+router.register('transactions',
+                views.PaymentMethodViewset,
+                base_name='transaction')
 
 
 urlpatterns = [

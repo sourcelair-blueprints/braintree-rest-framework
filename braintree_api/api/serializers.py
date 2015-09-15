@@ -18,16 +18,28 @@ class CustomerSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
+    transactions = serializers.SerializerMethodField(read_only=True)
 #     payment_method = serializers.CharField()
 
+    def get_transactions(self, customer):
+        transactions = braintree.Transaction.search(
+            braintree.TransactionSearch.customer_id == customer.id
+        ).items
+        return [
+            TransactionSerializer(t, context=self.context).data
+            for t in transactions
+        ]
 
 class TransactionSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
     status = serializers.CharField(read_only=True)
     amount = serializers.FloatField()
-    payment_method = serializers.CharField()
-    payment_method_url = None # TODO
-    customer_url = None # TODO
+    url = serializers.HyperlinkedIdentityField(
+        view_name='transaction-detail',
+        lookup_field='id',
+        lookup_url_kwarg='pk'
+    )
+#     customer_url = None # TODO
 
 
 class PaymentMethodSerializer(serializers.Serializer):
@@ -49,5 +61,4 @@ class PaymentMethodSerializer(serializers.Serializer):
     )
 
     def get_type(self, payment_method):
-        print dir(payment_method)
         return type(payment_method).__name__
