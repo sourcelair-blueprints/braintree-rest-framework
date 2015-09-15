@@ -3,6 +3,12 @@ from rest_framework import serializers
 
 class CustomerSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
+    url = serializers.HyperlinkedIdentityField(
+        view_name='customer-detail',
+        lookup_field='id',
+        lookup_url_kwarg='pk',
+        read_only=True
+    )
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
