@@ -19,7 +19,11 @@ from django.contrib import admin
 from rest_framework import routers
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register('customers', views.CustomerViewset, base_name='customer')
+router.register('customers', views.CustomerViewset,
+                base_name='customer')
+router.register('customers/(?P<customer_id>[a-z0-9]+)/payment-methods',
+                views.CustomerPaymentMethodViewset,
+                base_name='customer-payment-method')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

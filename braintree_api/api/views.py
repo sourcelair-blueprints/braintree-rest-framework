@@ -41,3 +41,19 @@ class CustomerViewset(viewsets.ViewSet):
         if result.is_success:
             return Response({'message': 'Deleted customer successfully'})
         return Response({'message': 'Could not delete customer.'}, status=500)
+
+
+class CustomerNamespacedMixin(object):
+    def get_customer(self):
+        return braintree.Customer.find(self.kwargs.get('customer_id'))
+
+
+class CustomerPaymentMethodViewset(CustomerNamespacedMixin,
+                                   viewsets.ViewSet):
+    serializer_class = serializers.PaymentMethodSerializer
+
+    def list(self, request, *args, **kwargs):
+        payment_methods = self.get_customer().payment_methods
+        serializer = self.serializer_class(payment_methods, many=True,
+                                           context={'request': request})
+        return Response(serializer.data)

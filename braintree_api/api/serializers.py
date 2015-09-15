@@ -1,3 +1,5 @@
+import braintree
+
 from rest_framework import serializers
 
 
@@ -27,6 +29,14 @@ class TransactionSerializer(serializers.Serializer):
 
 class PaymentMethodSerializer(serializers.Serializer):
     token = serializers.CharField(read_only=True)
-    type = serializers.CharField(read_only=True)
-    customer_url = None # TODO
-    
+    type = serializers.SerializerMethodField(read_only=True)
+    customer_url = serializers.HyperlinkedIdentityField(
+        many=True,
+        read_only=True,
+        view_name='customer-detail',
+        source='customer_id'
+    )
+
+    def get_type(self, payment_method):
+        print dir(payment_method)
+        return type(payment_method).__name__
