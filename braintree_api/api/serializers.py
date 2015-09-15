@@ -8,14 +8,17 @@ class CustomerSerializer(serializers.Serializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='customer-detail',
         lookup_field='id',
-        lookup_url_kwarg='pk',
-        read_only=True
+        lookup_url_kwarg='pk'
+    )
+    payment_methods_url = serializers.HyperlinkedIdentityField(
+        view_name='customer-payment-method-list',
+        lookup_field='id',
+        lookup_url_kwarg='customer_id'
     )
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
 #     payment_method = serializers.CharField()
-#     payment_method_url = None # TODO
 
 
 class TransactionSerializer(serializers.Serializer):
