@@ -9,5 +9,6 @@ class CustomerViewset(viewsets.ViewSet):
 
     def list(self, request):
         customers = braintree.Customer.all().items
-        serializer = self.serializer_class(customers, many=True)
+        serializer = self.serializer_class(customers, many=True,
+                                           context={'request': request})
         return Response(serializer.data)
