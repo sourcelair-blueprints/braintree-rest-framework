@@ -28,7 +28,7 @@ router.register('payment-methods',
                 views.PaymentMethodViewset,
                 base_name='payment-method')
 router.register('transactions',
-                views.PaymentMethodViewset,
+                views.TransactionViewset,
                 base_name='transaction')
 
 
