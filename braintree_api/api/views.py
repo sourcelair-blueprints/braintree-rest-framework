@@ -67,3 +67,13 @@ class CustomerPaymentMethodViewset(CustomerNamespacedMixin,
         serializer = self.serializer_class(payment_methods, many=True,
                                            context={'request': request})
         return Response(serializer.data)
+
+
+class TransactionViewset(viewsets.ViewSet):
+    serializer_class = serializers.TransactionSerializer
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        transaction = braintree.Transaction.find(pk)
+        serializer = self.serializer_class(transaction, many=False,
+                                           context={'request': request})
+        return Response(serializer.data)
