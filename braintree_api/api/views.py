@@ -48,6 +48,16 @@ class CustomerNamespacedMixin(object):
         return braintree.Customer.find(self.kwargs.get('customer_id'))
 
 
+class PaymentMethodViewset(viewsets.ViewSet):
+    serializer_class = serializers.PaymentMethodSerializer
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        payment_method = braintree.PaymentMethod.find(pk)
+        serializer = self.serializer_class(payment_method, many=False,
+                                           context={'request': request})
+        return Response(serializer.data)
+
+
 class CustomerPaymentMethodViewset(CustomerNamespacedMixin,
                                    viewsets.ViewSet):
     serializer_class = serializers.PaymentMethodSerializer
