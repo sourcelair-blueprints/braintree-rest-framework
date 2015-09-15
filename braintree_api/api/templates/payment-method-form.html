@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Add Payment Method</title>
+    <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+</head>
+<body>
+	<form>
+      <div id="dropin-container"></div>
+      <div>
+          <button>Save</button>
+      </div>
+    </form>
+    <script>
+        braintree.setup('{{ client_token }}', 'dropin', {
+          container: 'dropin-container',
+          onPaymentMethodReceived: function (obj) {
+              alert('asdasd');
+              window.location = '/customers/{{ customer_id}}/payment-methods';
+          }
+        });
+    </script>
+</body>
+</html>

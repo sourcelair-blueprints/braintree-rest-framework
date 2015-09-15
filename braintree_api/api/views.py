@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from api import serializers
 import braintree
@@ -56,6 +58,23 @@ class PaymentMethodViewset(viewsets.ViewSet):
         serializer = self.serializer_class(payment_method, many=False,
                                            context={'request': request})
         return Response(serializer.data)
+
+
+class PaymentMethodFormView(generics.RetrieveAPIView):
+    """
+    A view that returns a templated HTML representation of a given user.
+    """
+    renderer_classes = (TemplateHTMLRenderer,)
+
+    def get(self, request, customer_id):
+        client_token = braintree.ClientToken.generate({
+            "customer_id": customer_id
+        })
+        context = {
+            'client_token': client_token,
+            'customer_id': customer_id
+        }
+        return Response(context, template_name='payment-method-form.html')
 
 
 class CustomerPaymentMethodViewset(CustomerNamespacedMixin,

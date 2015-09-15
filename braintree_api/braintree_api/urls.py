@@ -30,5 +30,10 @@ router.register('payment-methods',
 
 
 urlpatterns = [
+    url(
+        r'^customers/(?P<customer_id>[a-z0-9]+)/payment-method-form',
+        views.PaymentMethodFormView.as_view(),
+        name='customer-payment-method-form'
+    ),
     url(r'^', include(router.urls)),
 ]
