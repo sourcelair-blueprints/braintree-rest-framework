@@ -41,5 +41,10 @@ urlpatterns = [
         views.PaymentMethodFormView.as_view(),
         name='customer-payment-method-form'
     ),
+    url(
+        r'^settings',
+        views.BraintreeSettingsView.as_view(),
+        name='braintree-settings'
+    ),
     url(r'^', include(router.urls)),
 ]

@@ -1,8 +1,10 @@
-from rest_framework import viewsets
+from api import serializers
+from django.conf import settings
 from rest_framework import generics
+from rest_framework import views
+from rest_framework import viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
-from api import serializers
 import braintree
 
 
@@ -157,3 +159,29 @@ class CustomerTransactionViewset(CustomerNamespacedMixin,
         else:
             response_data = {'message': 'Could not charge customer.'}
         return Response(response_data)
+
+
+class BraintreeSettingsView(views.APIView):
+    """
+    Update the Braintree API settings.
+    """
+    serializer_class = serializers.BraintreeSettingsSerializer
+
+    def get(self, request):
+        data = {
+            'environment': settings.BRAINTREE_ENVIRONMENT,
+            'merchant_id': settings.BRAINTREE_MERCHANT_ID,
+            'public_key': settings.BRAINTREE_PUBLIC_KEY,
+            'private_key': settings.BRAINTREE_PRIVATE_KEY
+        }
+        serializer = self.serializer_class(data=data)
+        serializer.is_valid(raise_exception=True)
+        return Response(data=serializer.data)
+
+    def post(self, request):
+        serializer = self.serializer_class(
+            data=request.data, context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.create(serializer.data)
+        return Response(data=serializer.data)

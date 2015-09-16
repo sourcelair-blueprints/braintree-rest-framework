@@ -103,7 +103,24 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+BRAINTREE_ENVIRONMENT = None
+BRAINTREE_MERCHANT_ID = None
+BRAINTREE_PUBLIC_KEY = None
+BRAINTREE_PRIVATE_KEY = None
+
+ARE_BRAINTREE_SETTINGS_READY = False
+
 try:
     from settings_local import *
 except ImportError:
     pass
+
+import braintree
+
+if ARE_BRAINTREE_SETTINGS_READY:
+    braintree.Configuration.configure(
+        BRAINTREE_ENVIRONMENT,
+        merchant_id=BRAINTREE_MERCHANT_ID,
+        public_key=BRAINTREE_PUBLIC_KEY,
+        private_key=BRAINTREE_PRIVATE_KEY
+    )

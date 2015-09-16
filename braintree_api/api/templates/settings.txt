@@ -1,0 +1,9 @@
+# Automatically created file
+import braintree
+
+BRAINTREE_ENVIRONMENT = braintree.Environment.{{ environment|capfirst }}
+BRAINTREE_MERCHANT_ID = '{{ merchant_id }}'
+BRAINTREE_PUBLIC_KEY = '{{ public_key }}'
+BRAINTREE_PRIVATE_KEY = '{{ private_key }}'
+
+ARE_BRAINTREE_SETTINGS_READY = True

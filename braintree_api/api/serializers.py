@@ -1,5 +1,6 @@
 import braintree
 
+from django.template import loader
 from rest_framework import serializers
 
 
@@ -77,3 +78,18 @@ class PaymentMethodSerializer(serializers.Serializer):
 
     def get_type(self, payment_method):
         return type(payment_method).__name__
+
+
+class BraintreeSettingsSerializer(serializers.Serializer):
+    environment = serializers.ChoiceField(
+        choices=[('sandbox', 'Sandbox'),('production', 'Production')]
+    )
+    merchant_id = serializers.CharField()
+    public_key = serializers.CharField()
+    private_key = serializers.CharField()
+
+    def create(self, validated_data):
+        t = loader.get_template('settings.txt')
+        settings = t.render(context=validated_data)
+        with open('braintree_api/settings_local.py', 'wb') as settings_file:
+            settings_file.write(settings)
