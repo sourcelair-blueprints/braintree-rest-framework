@@ -105,3 +105,38 @@ class TransactionViewset(viewsets.ViewSet):
         serializer = self.serializer_class(transaction, many=False,
                                            context={'request': request})
         return Response(serializer.data)
+
+
+class CustomerTransactionViewset(CustomerNamespacedMixin,
+                                   viewsets.ViewSet):
+    serializer_class = serializers.TransactionSerializer
+
+    def list(self, request, customer_id):
+        customer = self.get_customer()
+        customer_serializer = serializers.CustomerSerializer(
+            customer, context={'request': request}
+        )
+        transactions = customer_serializer.get_transactions(customer)
+        return Response(transactions)
+
+    def create(self, request, customer_id):
+        customer = self.get_customer()
+
+        payment_method_token = request.data.get(
+            'payment_method_token', customer.payment_methods[0].token
+        )
+
+        result = braintree.Transaction.sale({
+            'amount': request.data['amount'],
+            'customer_id': customer_id,
+            'payment_method_token': payment_method_token,
+            'options': {
+                'submit_for_settlement': True
+            }
+        })
+
+        if result.is_success:
+            response_data = {'message': 'Charged customer successfully.'}
+        else:
+            response_data = {'message': 'Could not charge customer.'}
+        return Response(response_data)

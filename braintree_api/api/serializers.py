@@ -20,6 +20,11 @@ class CustomerSerializer(serializers.Serializer):
         lookup_field='id',
         lookup_url_kwarg='customer_id'
     )
+    transactions_url = serializers.HyperlinkedIdentityField(
+        view_name='customer-transaction-list',
+        lookup_field='id',
+        lookup_url_kwarg='customer_id'
+    )
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
@@ -34,6 +39,7 @@ class CustomerSerializer(serializers.Serializer):
             for t in transactions
         ]
 
+
 class TransactionSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
     status = serializers.CharField(read_only=True)
@@ -43,7 +49,12 @@ class TransactionSerializer(serializers.Serializer):
         lookup_field='id',
         lookup_url_kwarg='pk'
     )
-#     customer_url = None # TODO
+    customer_url = serializers.HyperlinkedIdentityField(
+        view_name='customer-detail',
+        lookup_field='id',
+        lookup_url_kwarg='pk'
+    )
+    payment_method_token = serializers.CharField(write_only=True)
 
 
 class PaymentMethodSerializer(serializers.Serializer):
