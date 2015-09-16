@@ -7,6 +7,10 @@ import braintree
 
 
 class CustomerViewset(viewsets.ViewSet):
+    """
+    This view allows listing, creating, and deleting customers for the
+    currently set up Braintree merchant.
+    """
     serializer_class = serializers.CustomerSerializer
 
     def list(self, request):
@@ -51,6 +55,9 @@ class CustomerNamespacedMixin(object):
 
 
 class PaymentMethodViewset(viewsets.ViewSet):
+    """
+    This view allows inspecting and deleting payment methods.
+    """
     serializer_class = serializers.PaymentMethodSerializer
 
     def retrieve(self, request, pk=None, *args, **kwargs):
@@ -88,6 +95,9 @@ class PaymentMethodFormView(generics.RetrieveAPIView):
 
 class CustomerPaymentMethodViewset(CustomerNamespacedMixin,
                                    viewsets.ViewSet):
+    """
+    Lists all payment methods that belong to the given customer.
+    """
     serializer_class = serializers.PaymentMethodSerializer
 
     def list(self, request, *args, **kwargs):
@@ -98,6 +108,9 @@ class CustomerPaymentMethodViewset(CustomerNamespacedMixin,
 
 
 class TransactionViewset(viewsets.ViewSet):
+    """
+    This view allows inspection of the given transaction.
+    """
     serializer_class = serializers.TransactionSerializer
 
     def retrieve(self, request, pk=None, *args, **kwargs):
@@ -109,6 +122,10 @@ class TransactionViewset(viewsets.ViewSet):
 
 class CustomerTransactionViewset(CustomerNamespacedMixin,
                                    viewsets.ViewSet):
+    """
+    Lists all transactions of the given customer and allows charging the
+    customer with a new transaction.
+    """
     serializer_class = serializers.TransactionSerializer
 
     def list(self, request, customer_id):
